@@ -13,6 +13,7 @@ import QRCodeReader
 class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
 
     var timer = Timer()
+    var avPlayer: AVPlayer!
     lazy var readerVC: QRCodeReaderViewController = {
         let builder = QRCodeReaderViewControllerBuilder {
             $0.reader = QRCodeReader(metadataObjectTypes: [.qr], captureDevicePosition: .back)
@@ -33,21 +34,11 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
     
     @objc func playSound() {
         
-        var player = AVAudioPlayer()
+        timer.invalidate()
         let path = Bundle.main.path(forResource: "audio_assist", ofType : "mp3")!
         let url = URL(fileURLWithPath : path)
-        
-        do {
-            player = try AVAudioPlayer(contentsOf: url)
-            player.numberOfLoops = 1
-            player.prepareToPlay()
-            player.volume = 1.0
-            player.play()
-            
-        } catch {
-            
-            print ("There is an issue with this code!")
-        }
+        avPlayer = AVPlayer(url: url)
+        avPlayer.play()
     }
     
     @IBAction func scanButtonTapped(sender: UIButton!) {
